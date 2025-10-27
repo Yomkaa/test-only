@@ -1,1 +1,913 @@
-local Players=game:GetService("Players")local TweenService=game:GetService("TweenService")local RunService=game:GetService("RunService")local _h=Players.LocalPlayer local playerGui=_h:WaitForChild("PlayerGui")local screenGui=Instance.new("ScreenGui")screenGui.Parent=playerGui screenGui.IgnoreGuiInset=true screenGui.ResetOnSpawn=false local _a=Instance.new("Frame")_a.Size=UDim2.new(1,0,1,0)_a.Position=UDim2.new(0,0,0,0)_a.BackgroundColor3=Color3.fromRGB(0,0,0)_a.BackgroundTransparency=0.7 _a.BorderSizePixel=0 _a.Parent=screenGui local uiGradient=Instance.new("UIGradient")uiGradient.Color=ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.fromRGB(200,100,255)),ColorSequenceKeypoint.new(0.5,Color3.fromRGB(100,200,255)),ColorSequenceKeypoint.new(1,Color3.fromRGB(255,100,150))}uiGradient.Rotation=45 uiGradient.Parent=_a local randomMessages={"You're a Roblox Legend!","Adventure Awaits You!","Unleash Your Creativity!","Secret Bonus Unlocked!","Greetings from xAI!"}local randomIndex=math.random(1,#randomMessages)local _m=randomMessages[randomIndex] local _i=Instance.new("TextLabel")_i.Size=UDim2.new(0.7,0,0.15,0)_i.Position=UDim2.new(0.15,0,0.25,0)_i.BackgroundTransparency=1 _i.Text=_m _i.TextColor3=Color3.fromRGB(255,255,255)_i.TextScaled=true _i.Font=Enum.Font.SourceSans _i.TextStrokeTransparency=0.7 _i.TextStrokeColor3=Color3.fromRGB(0,0,0)_i.Parent=_a local _e=Instance.new("UIStroke")_e.Thickness=3 _e.Transparency=0.4 _e.Color=Color3.fromRGB(255,200,50)_e.Parent=_i local _f="rbxassetid://188835749" local imageLabel=Instance.new("ImageLabel")imageLabel.Size=UDim2.new(0.3,0,0.3,0)imageLabel.Position=UDim2.new(0.35,0,0.45,0)imageLabel.BackgroundTransparency=1 imageLabel.Image=_f imageLabel.ScaleType=Enum.ScaleType.Fit imageLabel.Parent=_a local function adjustPositions()local screenSize=screenGui.AbsoluteSize if screenSize.X<screenSize.Y then _i.Position=UDim2.new(0.15,0,0.2,0)imageLabel.Position=UDim2.new(0.35,0,0.45,0)else _i.Position=UDim2.new(0.1,0,0.3,0)imageLabel.Position=UDim2.new(0.6,0,0.3,0)end end adjustPositions()screenGui:GetPropertyChangedSignal("AbsoluteSize"):Connect(adjustPositions)local tweenInfo=TweenInfo.new(0.8,Enum.EasingStyle.Back,Enum.EasingDirection.Out)local bgTweenIn=TweenService:Create(_a,tweenInfo,{BackgroundTransparency=0.4})local textTweenIn=TweenService:Create(_i,tweenInfo,{TextTransparency=0,Position=_i.Position+UDim2.new(0,0,0.05,0),Size=UDim2.new(0.7,0,0.17,0)})local imageTweenIn=TweenService:Create(imageLabel,tweenInfo,{ImageTransparency=0,Position=imageLabel.Position+UDim2.new(0,0,-0.05,0),Size=UDim2.new(0.32,0,0.32,0)})bgTweenIn:Play()textTweenIn:Play()imageTweenIn:Play()spawn(function()while _a.Parent do uiGradient.Rotation=(uiGradient.Rotation+0.5)%360 RunService.Heartbeat:Wait()end end)wait(3)local tweenOutInfo=TweenInfo.new(0.8,Enum.EasingStyle.Quad,Enum.EasingDirection.In)local bgTweenOut=TweenService:Create(_a,tweenOutInfo,{BackgroundTransparency=1})local textTweenOut=TweenService:Create(_i,tweenOutInfo,{TextTransparency=1,Position=_i.Position+UDim2.new(0,0,-0.1,0)})local imageTweenOut=TweenService:Create(imageLabel,tweenOutInfo,{ImageTransparency=1,Position=imageLabel.Position+UDim2.new(0,0,0.1,0)})bgTweenOut:Play()textTweenOut:Play()imageTweenOut:Play()bgTweenOut.Completed:Connect(function()screenGui:Destroy()end)
+local Players = game:GetService(string.char(80,108,97,121,101,114,115))
+local ReplicatedStorage = game:GetService(string.char(82,101,112,108,105,99,97,116,101,100,83,116,111,114,97,103,101))
+local Workspace = game:GetService(string.char(87,111,114,107,115,112,97,99,101))
+local RunService = game:GetService(string.char(82,117,110,83,101,114,118,105,99,101))
+local VirtualUser = game:GetService(string.char(86,105,114,116,117,97,108,85,115,101,114))
+local ProximityPromptService = game:GetService(string.char(80,114,111,120,105,109,105,116,121,80,114,111,109,112,116,83,101,114,118,105,99,101))
+local UserInputService = game:GetService(string.char(85,115,101,114,73,110,112,117,116,83,101,114,118,105,99,101))
+local VirtualInputManager = game:GetService(string.char(86,105,114,116,117,97,108,73,110,112,117,116,77,97,110,97,103,101,114))
+local player = Players.LocalPlayer
+local givePlugRE = ReplicatedStorage:WaitForChild(string.char(76,105,98,115)):WaitForChild(string.char(71,105,118,101,80,108,117,103))
+local TriggerPromptRemote = ReplicatedStorage:WaitForChild(string.char(84,114,105,103,103,101,114,80,114,111,109,112,116))
+local flags = {
+autoBeacons = false,
+autoBreakers = false,
+autoPickupPlug = false,
+removeEntities = false,
+removeSounds = false,
+fullBright = false,
+fullBrightInit = false,
+antiAfk = false,
+cframeSpeedEnabled = false,
+removeEyes = false,
+removeElkman = false,
+autoOpenAllDoors = false,
+removeDumbEntities = false,
+autoEquipLamp = false,
+autoEquipFlashLight = false,
+noClip = false,
+doorESP = false,
+}
+local cframeSpeed = 50
+local NormalLightingSettings = {}
+local function getCurrentRoom()
+local char = player.Character
+if not char or not char:FindFirstChild(string.char(72,117,109,97,110,111,105,100,82,111,111,116,80,97,114,116)) then return nil end
+for _, room in ipairs(Workspace.Rooms:GetChildren()) do
+local ent = room:FindFirstChild(string.char(69,110,116,114,97,110,99,101))
+if ent and (char.HumanoidRootPart.Position - ent.Position).Magnitude < 10 then
+return room
+end
+end
+return nil
+end
+local SugarLibrary = loadstring(game:HttpGetAsync(string.char(104,116,116,112,115,58,47,47,114,97,119,46,103,105,116,104,117,98,117,115,101,114,99,111,110,116,101,110,116,46,99,111,109,47,89,111,109,107,97,118,50,47,83,117,103,97,114,45,85,73,47,114,101,102,115,47,104,101,97,100,115,47,109,97,105,110,47,83,111,117,114,99,101)))();
+local Notification = SugarLibrary.Notification();
+Notification.new({
+Title = string.char(84,72,88,32,70,79,82,32,85,83,73,78,71,32,89,79,88,73,32,72,85,66),
+Description = string.char(84,101,108,101,103,114,97,109,58,32,64,89,111,109,107,97,77,97,100,101,73,116),
+Duration = 5,
+Icon = string.char(98,101,108,108,45,114,105,110,103)
+})
+local Windows = SugarLibrary.new({
+Title = string.char(89,79,88,73,32,72,85,66,32,124,32,71,82,65,67,69),
+Description = string.char(77,97,100,101,32,98,121,58,32,89,111,109,107,97,32,124,32,84,101,108,101,103,114,97,109,32,45,32,64,89,111,109,107,97,77,97,100,101,73,116),
+Keybind = Enum.KeyCode.B,
+Logo = string.char(114,98,120,97,115,115,101,116,105,100,58,47,47,56,50,56,57,56,57,56,53,54,55,54,51,55,50),
+ConfigFolder = string.char(89,111,120,105,72,117,98,71,82,65,67,69,67,70,71) 
+})
+local InfoTab = Windows:NewTab({
+Title = string.char(73,110,102,111),
+Description = string.char(73,110,102,111,114,109,97,116,105,111,110),
+Icon = string.char(105,110,102,111)
+})
+local AutoOpensTab = Windows:NewTab({
+Title = string.char(65,117,116,111,32,111,112,101,110,39,115),
+Description = string.char(65,117,116,111,32,70,101,97,116,117,114,101,115),
+Icon = string.char(100,111,111,114,45,111,112,101,110)
+})
+local PlayerTab = Windows:NewTab({
+Title = string.char(80,108,97,121,101,114),
+Description = string.char(80,108,97,121,101,114,32,77,111,100,105,102,105,99,97,116,105,111,110,115),
+Icon = string.char(117,115,101,114)
+})
+local MiscTab = Windows:NewTab({
+Title = string.char(77,105,115,99),
+Description = string.char(77,105,115,99,101,108,108,97,110,101,111,117,115),
+Icon = string.char(115,101,116,116,105,110,103,115)
+})
+local InfoSection = InfoTab:NewSection({
+Title = string.char(73,110,102,111,114,109,97,116,105,111,110),
+Icon = string.char(105,110,102,111),
+Position = string.char(76,101,102,116)
+})
+InfoSection:NewTitle(string.char(77,97,100,101,32,98,121,58,32,89,111,109,107,97))
+InfoSection:NewTitle(string.char(84,101,108,101,103,114,97,109,58,32,64,89,111,109,107,97,77,97,100,101,73,116))
+InfoSection:NewTitle(string.char(71,85,73,32,84,111,103,103,108,101,32,45,32,66))
+InfoSection:NewButton({
+Title = string.char(74,111,105,110,32,84,101,108,101,103,114,97,109),
+Callback = function()
+setclipboard(string.char(104,116,116,112,115,58,47,47,116,46,109,101,47,89,111,109,107,97,77,97,100,101,73,116))
+Notification.new({
+Title = string.char(76,105,110,107,32,67,111,112,105,101,100),
+Description = string.char(84,101,108,101,103,114,97,109,32,99,104,97,110,110,101,108,32,108,105,110,107,32,99,111,112,105,101,100,32,116,111,32,99,108,105,112,98,111,97,114,100,33),
+Duration = 5,
+Icon = string.char(99,108,105,112,98,111,97,114,100)
+})
+end,
+})
+local AutoCompleteSection = AutoOpensTab:NewSection({
+Title = string.char(65,117,116,111,32,67,111,109,112,108,101,116,101),
+Icon = string.char(99,105,114,99,108,101,45,99,104,101,99,107),
+Position = string.char(76,101,102,116)
+})
+AutoCompleteSection:NewToggle({
+Title = string.char(65,117,116,111,32,99,111,109,112,108,101,116,101,32,66,101,97,99,111,110,115),
+Name = string.char(65,117,116,111,66,101,97,99,111,110,115),
+Default = false,
+Callback = function(state)
+flags.autoBeacons = state
+if state then
+spawn(function()
+while flags.autoBeacons do
+local room = getCurrentRoom()
+if room then
+for _, v in ipairs(room:GetChildren()) do
+if v.Name == string.char(66,101,97,99,111,110) and v:FindFirstChild(string.char(84,114,105,103,103,101,114)) then
+for attempt = 1, 3 do
+pcall(function() v.Trigger:FireServer() end)
+task.wait(0.1)
+if not v:FindFirstChild(string.char(80,108,117,103,103,101,100)) then
+pcall(function() givePlugRE:FireServer() end)
+task.wait(0.5)
+local bp = player:WaitForChild(string.char(66,97,99,107,112,97,99,107))
+local plug = bp:FindFirstChild(string.char(80,108,117,103))
+if plug and player.Character then
+local hum = player.Character:FindFirstChildOfClass(string.char(72,117,109,97,110,111,105,100))
+if hum then hum:EquipTool(plug) end
+break
+end
+else
+break
+end
+end
+end
+end
+end
+task.wait(0.2)
+end
+end)
+end
+end
+})
+AutoCompleteSection:NewToggle({
+Title = string.char(65,117,116,111,32,99,111,109,112,108,101,116,101,32,66,114,101,97,107,101,114,115),
+Name = string.char(65,117,116,111,66,114,101,97,107,101,114,115),
+Default = false,
+Callback = function(state)
+flags.autoBreakers = state
+if state then
+spawn(function()
+while flags.autoBreakers do
+local room = getCurrentRoom()
+if room then
+for _, v in ipairs(room:GetChildren()) do
+if v.Name == string.char(66,114,101,97,107,101,114) and v:FindFirstChild(string.char(84,111,117,99,104,101,100)) then
+pcall(function() v.Touched:FireServer() end)
+task.wait(0.1)
+end
+end
+end
+task.wait(0.2)
+end
+end)
+end
+end
+})
+local AutoPickupSection = AutoOpensTab:NewSection({
+Title = string.char(65,117,116,111,32,80,105,99,107,117,112,32,97,110,100,32,69,113,117,105,112),
+Icon = string.char(104,97,110,100,45,103,114,97,98),
+Position = string.char(76,101,102,116)
+})
+AutoPickupSection:NewToggle({
+Title = string.char(65,117,116,111,32,80,105,99,107,117,112,32,80,108,117,103),
+Name = string.char(65,117,116,111,80,105,99,107,117,112,80,108,117,103),
+Default = false,
+Callback = function(state)
+flags.autoPickupPlug = state
+if state then
+spawn(function()
+while flags.autoPickupPlug do
+local room = getCurrentRoom()
+if room then
+local tool = room:FindFirstChild(string.char(80,108,117,103))
+if tool and tool:IsA(string.char(84,111,111,108)) then
+pcall(function() givePlugRE:FireServer() end)
+task.wait(0.5)
+local bp = player:WaitForChild(string.char(66,97,99,107,112,97,99,107))
+local plug = bp:FindFirstChild(string.char(80,108,117,103))
+if plug and player.Character then
+local hum = player.Character:FindFirstChildOfClass(string.char(72,117,109,97,110,111,105,100))
+if hum then hum:EquipTool(plug) end
+end
+end
+end
+task.wait(0.5)
+end
+end)
+end
+end
+})
+AutoPickupSection:NewToggle({
+Title = string.char(65,117,116,111,32,69,113,117,105,112,32,76,97,109,112),
+Name = string.char(65,117,116,111,69,113,117,105,112,76,97,109,112),
+Default = false,
+Callback = function(state)
+flags.autoEquipLamp = state
+if state then
+spawn(function()
+while flags.autoEquipLamp do
+local backpack = player:FindFirstChild(string.char(66,97,99,107,112,97,99,107))
+if backpack then
+local lamp = backpack:FindFirstChild(string.char(76,97,110,116,101,114,110,66,97,115,101))
+if lamp and player.Character then
+local hum = player.Character:FindFirstChildOfClass(string.char(72,117,109,97,110,111,105,100))
+if hum then hum:EquipTool(lamp) end
+end
+end
+task.wait(0.5)
+end
+end)
+end
+end
+})
+AutoPickupSection:NewToggle({
+Title = string.char(65,117,116,111,32,69,113,117,105,112,32,70,108,97,115,104,76,105,103,104,116),
+Name = string.char(65,117,116,111,69,113,117,105,112,70,108,97,115,104,76,105,103,104,116),
+Default = false,
+Callback = function(state)
+flags.autoEquipFlashLight = state
+if state then
+spawn(function()
+while flags.autoEquipFlashLight do
+local backpack = player:FindFirstChild(string.char(66,97,99,107,112,97,99,107))
+if backpack then
+local flashlight = backpack:FindFirstChild(string.char(70,108,97,115,104,108,105,103,104,116,66,97,115,101))
+if flashlight and player.Character then
+local hum = player.Character:FindFirstChildOfClass(string.char(72,117,109,97,110,111,105,100))
+if hum then hum:EquipTool(flashlight) end
+end
+end
+task.wait(0.5)
+end
+end)
+end
+end
+})
+AutoPickupSection:NewToggle({
+Title = string.char(65,117,116,111,32,111,112,101,110,32,65,108,108,32,68,111,111,114,115),
+Name = string.char(65,117,116,111,79,112,101,110,65,108,108,68,111,111,114,115),
+Default = false,
+Callback = function(state)
+flags.autoOpenAllDoors = state
+if state then
+local AURA_RADIUS = 18
+local trackedPrompts = {}
+local trackedRemoteEvents = {}
+local function trackPrompt(prompt)
+if not prompt or not prompt:IsA(string.char(80,114,111,120,105,109,105,116,121,80,114,111,109,112,116)) or trackedPrompts[prompt] then
+return
+end
+pcall(function() prompt.HoldDuration = 0 end)
+trackedPrompts[prompt] = true
+end
+local function untrackPrompt(prompt)
+trackedPrompts[prompt] = nil
+end
+local function trackRemoteEvent(remoteEvent)
+if not remoteEvent or not remoteEvent:IsA(string.char(82,101,109,111,116,101,69,118,101,110,116)) or trackedRemoteEvents[remoteEvent] then
+return
+end
+if remoteEvent.Parent and remoteEvent.Parent.Name == string.char(68,111,111,114) and remoteEvent.Parent.Parent and remoteEvent.Parent.Parent.Parent == Workspace.Rooms then
+trackedRemoteEvents[remoteEvent] = true
+end
+end
+local function untrackRemoteEvent(remoteEvent)
+trackedRemoteEvents[remoteEvent] = nil
+end
+for _, obj in ipairs(Workspace:GetDescendants()) do
+if obj:IsA(string.char(80,114,111,120,105,109,105,116,121,80,114,111,109,112,116)) then
+trackPrompt(obj)
+elseif obj:IsA(string.char(82,101,109,111,116,101,69,118,101,110,116)) then
+trackRemoteEvent(obj)
+end
+end
+Workspace.DescendantAdded:Connect(function(obj)
+if obj:IsA(string.char(80,114,111,120,105,109,105,116,121,80,114,111,109,112,116)) then
+trackPrompt(obj)
+elseif obj:IsA(string.char(82,101,109,111,116,101,69,118,101,110,116)) then
+trackRemoteEvent(obj)
+end
+end)
+Workspace.DescendantRemoving:Connect(function(obj)
+if obj:IsA(string.char(80,114,111,120,105,109,105,116,121,80,114,111,109,112,116)) then
+untrackPrompt(obj)
+elseif obj:IsA(string.char(82,101,109,111,116,101,69,118,101,110,116)) then
+untrackRemoteEvent(obj)
+end
+end)
+ProximityPromptService.PromptShown:Connect(trackPrompt)
+local connection
+connection = RunService.RenderStepped:Connect(function()
+if not flags.autoOpenAllDoors then
+connection:Disconnect()
+return
+end
+local character = player.Character
+if not character or not character.PrimaryPart then return end
+local playerPosition = character.PrimaryPart.Position
+for prompt in pairs(trackedPrompts) do
+local promptParent = prompt.Parent
+if promptParent and promptParent:IsA(string.char(66,97,115,101,80,97,114,116)) then
+local distance = (promptParent.Position - playerPosition).Magnitude
+if distance <= AURA_RADIUS then
+pcall(function() prompt:InputHoldBegin() end)
+pcall(function() prompt:InputHoldEnd() end)
+pcall(function() fireproximityprompt(prompt, 0) end)
+pcall(function() TriggerPromptRemote:FireServer(prompt) end)
+end
+end
+end
+for remoteEvent in pairs(trackedRemoteEvents) do
+local door = remoteEvent.Parent
+if door then
+local pos = door:IsA(string.char(77,111,100,101,108)) and door:GetPivot().Position or door.Position
+local distance = (pos - playerPosition).Magnitude
+if distance <= AURA_RADIUS then
+pcall(function() remoteEvent:FireServer() end)
+end
+end
+end
+end)
+end
+end
+})
+local PlayerSettingsSection = PlayerTab:NewSection({
+Title = string.char(80,108,97,121,101,114,32,83,101,116,116,105,110,103,115),
+Icon = string.char(117,115,101,114,45,99,111,103),
+Position = string.char(76,101,102,116)
+})
+PlayerSettingsSection:NewToggle({
+Title = string.char(65,110,116,105,45,65,70,75),
+Name = string.char(65,110,116,105,65,102,107),
+Default = false,
+Callback = function(state)
+flags.antiAfk = state
+if state then
+player.Idled:Connect(function()
+VirtualUser:CaptureController()
+VirtualUser:ClickButton2(Vector2.new())
+warn(string.char(65,110,116,105,45,65,70,75,32,97,99,116,105,118,97,116,101,100))
+end)
+end
+end
+})
+local MovementSettingsSection = PlayerTab:NewSection({
+Title = string.char(77,111,118,101,109,101,110,116,32,83,101,116,116,105,110,103,115),
+Icon = string.char(109,111,118,101),
+Position = string.char(76,101,102,116)
+})
+MovementSettingsSection:NewSlider({
+Title = string.char(67,70,114,97,109,101,32,83,112,101,101,100),
+Name = string.char(67,70,114,97,109,101,83,112,101,101,100),
+Min = 0,
+Max = 100,
+Default = 50,
+Callback = function(val) cframeSpeed = val end
+})
+MovementSettingsSection:NewToggle({
+Title = string.char(69,110,97,98,108,101,32,67,70,114,97,109,101,32,83,112,101,101,100),
+Name = string.char(67,70,114,97,109,101,83,112,101,101,100,69,110,97,98,108,101,100),
+Default = false,
+Callback = function(state) flags.cframeSpeedEnabled = state end
+})
+RunService.RenderStepped:Connect(function(dt)
+if flags.cframeSpeedEnabled and player.Character and player.Character:FindFirstChild(string.char(72,117,109,97,110,111,105,100,82,111,111,116,80,97,114,116)) then
+local hrp = player.Character.HumanoidRootPart
+local dir = player.Character.Humanoid.MoveDirection
+if dir.Magnitude > 0 then
+hrp.CFrame = hrp.CFrame + dir * cframeSpeed * dt
+end
+end
+end)
+local originalCollideSettings = {}
+local noclipConnection = nil
+local function storeOriginalCollisions()
+originalCollideSettings = {}
+if player.Character then
+for _, part in pairs(player.Character:GetDescendants()) do
+if part:IsA(string.char(66,97,115,101,80,97,114,116)) then
+originalCollideSettings[part] = part.CanCollide
+end
+end
+end
+end
+local function restoreCollisions()
+for part, canColl in pairs(originalCollideSettings) do
+if part and part.Parent then
+part.CanCollide = canColl
+end
+end
+originalCollideSettings = {}
+end
+local function enableNoclip()
+if noclipConnection then
+return
+end
+storeOriginalCollisions()
+noclipConnection = RunService.Stepped:Connect(function()
+if flags.noClip and player.Character then
+for _, part in pairs(player.Character:GetDescendants()) do
+if part:IsA(string.char(66,97,115,101,80,97,114,116)) then
+part.CanCollide = false
+end
+end
+end
+end)
+end
+local function disableNoclip()
+if noclipConnection then
+noclipConnection:Disconnect()
+noclipConnection = nil
+end
+restoreCollisions()
+end
+MovementSettingsSection:NewToggle({
+Title = string.char(78,111,67,108,105,112),
+Name = string.char(78,111,67,108,105,112),
+Default = false,
+Description = string.char(80,97,115,115,32,116,104,114,111,117,103,104,32,111,98,106,101,99,116,115),
+Callback = function(state)
+flags.noClip = state
+if state then
+enableNoclip()
+Notification.new({
+Title = string.char(78,111,67,108,105,112,32,69,110,97,98,108,101,100),
+Description = string.char(69,110,106,111,121),
+Duration = 3,
+Icon = string.char(117,110,108,111,99,107)
+})
+else
+disableNoclip()
+Notification.new({
+Title = string.char(78,111,67,108,105,112,32,68,105,115,97,98,108,101,100),
+Description = string.char(78,111,99,108,105,112,32,100,105,115,97,98,108,101,100),
+Duration = 3,
+Icon = string.char(108,111,99,107)
+})
+end
+end
+})
+local noclipKey = Enum.KeyCode.N
+local noclipToggleConnection = nil
+local function setupNoclipKeybindListener()
+if noclipToggleConnection then
+noclipToggleConnection:Disconnect()
+noclipToggleConnection = nil
+end
+noclipToggleConnection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+if gameProcessed then return end
+if input.KeyCode == noclipKey then
+flags.noClip = not flags.noClip
+if flags.noClip then
+enableNoclip()
+Notification.new({
+Title = string.char(78,111,67,108,105,112,32,69,110,97,98,108,101,100),
+Description = string.char(69,110,106,111,121),
+Duration = 3,
+Icon = string.char(98,108,101,110,100)
+})
+else
+disableNoclip()
+Notification.new({
+Title = string.char(78,111,67,108,105,112,32,68,105,115,97,98,108,101,100),
+Description = string.char(78,111,99,108,105,112,32,100,105,115,97,98,108,101,100),
+Duration = 3,
+Icon = string.char(108,111,99,107)
+})
+end
+end
+end)
+end
+setupNoclipKeybindListener()
+MovementSettingsSection:NewKeybind({
+Title = string.char(78,111,67,108,105,112,32,75,101,121,98,105,110,100),
+Name = string.char(78,111,67,108,105,112,75,101,121,98,105,110,100),
+Default = Enum.KeyCode.N,
+Description = string.char(75,101,121,32,116,111,32,116,111,103,103,108,101,32,78,111,67,108,105,112),
+Callback = function(key)
+if typeof(key) == string.char(69,110,117,109,73,116,101,109) then
+noclipKey = key
+elseif typeof(key) == string.char(115,116,114,105,110,103) then
+local upper = key:upper()
+local suc, enumKey = pcall(function() return Enum.KeyCode[upper] end)
+if suc and enumKey then
+noclipKey = enumKey
+end
+end
+setupNoclipKeybindListener()
+end
+})
+local EntityRemovalSection = MiscTab:NewSection({
+Title = string.char(69,110,116,105,116,121,32,82,101,109,111,118,97,108),
+Icon = string.char(116,114,97,115,104),
+Position = string.char(76,101,102,116)
+})
+EntityRemovalSection:NewToggle({
+Title = string.char(82,101,109,111,118,101,32,67,97,114,110,97,116,105,111,110),
+Name = string.char(82,101,109,111,118,101,69,110,116,105,116,105,101,115),
+Default = false,
+Callback = function(state)
+flags.removeEntities = state
+if state then
+for _, c in ipairs(Workspace:GetChildren()) do
+if (c.Name == string.char(80,97,114,116) and c:FindFirstChild(string.char(83,99,114,105,112,116))) or c.Name == string.char(82,97,105,110) or c.Name == string.char(83,108,117,103,102,105,115,104) or c.Name == string.char(82,117,115,104) then
+c:Destroy()
+end
+end
+for _, room in ipairs(Workspace.Rooms:GetChildren()) do
+local sp = room:FindFirstChild(string.char(69,121,101,83,112,97,119,110,115))
+if sp then
+for _, part in ipairs(sp:GetChildren()) do part:Destroy() end
+sp.ChildAdded:Connect(function(p) if flags.removeEntities then p:Destroy() end end)
+end
+end
+Workspace.ChildAdded:Connect(function(c)
+if (c.Name == string.char(80,97,114,116) and c:FindFirstChild(string.char(83,99,114,105,112,116))) or c.Name == string.char(82,97,105,110) or c.Name == string.char(83,108,117,103,102,105,115,104) or c.Name == string.char(82,117,115,104) then
+c:Destroy()
+end
+end)
+end
+end
+})
+EntityRemovalSection:NewTitle(string.char(80,105,110,107,32,101,121,101,32,97,107,97,32,82,117,115,104))
+EntityRemovalSection:NewToggle({
+Title = string.char(82,101,109,111,118,101,32,69,121,101,115),
+Name = string.char(82,101,109,111,118,101,69,121,101,115),
+Default = false,
+Callback = function(state)
+flags.removeEyes = state
+if state then
+local function removeEyesInRoom(room)
+local eyeSpawns = room:FindFirstChild(string.char(69,121,101,83,112,97,119,110,115))
+if eyeSpawns then
+for _, obj in ipairs(eyeSpawns:GetChildren()) do
+if obj.Name == string.char(49) or obj.Name == string.char(50) or obj.Name == string.char(51) or obj.Name == string.char(101,121,101) then
+obj:Destroy()
+end
+end
+eyeSpawns.ChildAdded:Connect(function(child)
+if flags.removeEyes and (child.Name == string.char(49) or child.Name == string.char(50) or child.Name == string.char(51) or child.Name == string.char(101,121,101)) then
+child:Destroy()
+end
+end)
+end
+end
+for _, room in ipairs(Workspace.Rooms:GetChildren()) do
+removeEyesInRoom(room)
+end
+Workspace.Rooms.ChildAdded:Connect(function(newRoom)
+removeEyesInRoom(newRoom)
+end)
+end
+end
+})
+EntityRemovalSection:NewToggle({
+Title = string.char(82,101,109,111,118,101,32,68,117,109,98,32,69,108,107,109,97,110),
+Name = string.char(82,101,109,111,118,101,69,108,107,109,97,110),
+Default = false,
+Callback = function(state)
+flags.removeElkman = state
+if state then
+local function removeElkman(room)
+local elkman = room:FindFirstChild(string.char(101,108,107,109,97,110))
+if elkman then elkman:Destroy() end
+end
+for _, room in ipairs(Workspace.Rooms:GetChildren()) do
+removeElkman(room)
+room.ChildAdded:Connect(function(child)
+if flags.removeElkman and child.Name == string.char(101,108,107,109,97,110) then
+child:Destroy()
+end
+end)
+end
+Workspace.Rooms.ChildAdded:Connect(function(newRoom)
+newRoom.ChildAdded:Connect(function(child)
+if flags.removeElkman and child.Name == string.char(101,108,107,109,97,110) then
+child:Destroy()
+end
+end)
+end)
+end
+end
+})
+EntityRemovalSection:NewToggle({
+Title = string.char(82,101,109,111,118,101,32,115,111,109,101,32,100,117,109,98,32,101,110,116,105,116,105,101,115),
+Name = string.char(82,101,109,111,118,101,68,117,109,98,69,110,116,105,116,105,101,115),
+Default = false,
+Callback = function(state)
+flags.removeDumbEntities = state
+if state then
+workspace.DescendantAdded:Connect(function(descendant)
+if descendant.Name == string.char(101,121,101) or descendant.Name == string.char(101,108,107,109,97,110) or descendant.Name == string.char(82,117,115,104) or descendant.Name == string.char(87,111,114,109) or descendant.Name == string.char(101,121,101,80,114,105,109,101) or descendant.Name == string.char(82,97,105,110) or descendant.Name == string.char(115,111,114,114,111,119) or descendant.Name == string.char(114,97,105,110) or descendant.Name == string.char(82,97,105,110,49) or descendant.Name == string.char(83,111,114,114,111,119) then
+descendant:Destroy()
+end
+end)
+spawn(function()
+while flags.removeDumbEntities do
+local eyeGui = player:FindFirstChild(string.char(80,108,97,121,101,114,71,117,105)):FindFirstChild(string.char(101,121,101,103,117,105))
+if eyeGui then eyeGui:Destroy() end
+task.wait(0.1)
+end
+end)
+spawn(function()
+while flags.removeDumbEntities do
+local smileGui = player:FindFirstChild(string.char(80,108,97,121,101,114,71,117,105)):FindFirstChild(string.char(115,109,105,108,101,103,117,105))
+if smileGui then smileGui:Destroy() end
+task.wait(0.1)
+end
+end)
+spawn(function()
+while flags.removeDumbEntities do
+local FUNNYGOATMAN = player:FindFirstChild(string.char(80,108,97,121,101,114,71,117,105)):FindFirstChild(string.char(71,79,65,84,80,79,82,84))
+if FUNNYGOATMAN then FUNNYGOATMAN:Destroy() end
+task.wait(0.1)
+end
+end)
+end
+end
+})
+EntityRemovalSection:NewTitle(string.char(82,101,100,32,82,97,105,110,32,100,111,110,116,32,103,101,116,32,100,101,108,105,116,101,100,32,98,116,119,32,115,111,114,114,121))
+local SoundSettingsSection = MiscTab:NewSection({
+Title = string.char(83,111,117,110,100,32,83,101,116,116,105,110,103,115),
+Icon = string.char(118,111,108,117,109,101,45,50),
+Position = string.char(76,101,102,116)
+})
+SoundSettingsSection:NewToggle({
+Title = string.char(82,101,109,111,118,101,32,83,111,109,101,32,68,117,109,98,32,83,111,117,110,100,115),
+Name = string.char(82,101,109,111,118,101,83,111,117,110,100,115),
+Default = false,
+Callback = function(state)
+flags.removeSounds = state
+local guiTime = player:FindFirstChild(string.char(80,108,97,121,101,114,71,117,105)) and player.PlayerGui:FindFirstChild(string.char(116,105,109,101,117,105))
+if state then
+for _, s in ipairs(game:GetDescendants()) do
+if s:IsA(string.char(83,111,117,110,100)) and not (guiTime and s:IsDescendantOf(guiTime)) then
+if s.Name:lower() == string.char(116,105,110,110,105,116,117,115) then
+s:Destroy()
+else
+s:Stop()
+end
+end
+end
+game.DescendantAdded:Connect(function(o)
+if o:IsA(string.char(83,111,117,110,100)) and not (guiTime and o:IsDescendantOf(guiTime)) then
+if o.Name:lower() == string.char(116,105,110,110,105,116,117,115) then
+o:Destroy()
+else
+o:Stop()
+end
+end
+end)
+end
+end
+})
+SoundSettingsSection:NewTitle(string.char(69,110,97,98,108,101,32,73,116,33))
+local LightingSettingsSection = MiscTab:NewSection({
+Title = string.char(76,105,103,104,116,105,110,103,32,83,101,116,116,105,110,103,115),
+Icon = string.char(115,117,110),
+Position = string.char(76,101,102,116)
+})
+LightingSettingsSection:NewToggle({
+Title = string.char(70,117,108,108,66,114,105,103,104,116),
+Name = string.char(70,117,108,108,66,114,105,103,104,116),
+Default = false,
+Callback = function(state)
+local L = game:GetService(string.char(76,105,103,104,116,105,110,103))
+if not flags.fullBrightInit then
+NormalLightingSettings = {
+Brightness = L.Brightness,
+ClockTime = L.ClockTime,
+FogEnd = L.FogEnd,
+GlobalShadows = L.GlobalShadows,
+Ambient = L.Ambient
+}
+for _, prop in ipairs({string.char(66,114,105,103,104,116,110,101,115,115), string.char(67,108,111,99,107,84,105,109,101), string.char(70,111,103,69,110,100), string.char(71,108,111,98,97,108,83,104,97,100,111,119,115), string.char(65,109,98,105,101,110,116)}) do
+L:GetPropertyChangedSignal(prop):Connect(function()
+if flags.fullBright then
+if prop == string.char(65,109,98,105,101,110,116) then L.Ambient = Color3.fromRGB(255,255,255)
+elseif prop == string.char(71,108,111,98,97,108,83,104,97,100,111,119,115) then L.GlobalShadows = false
+elseif prop == string.char(70,111,103,69,110,100) then L.FogEnd = 1000000
+elseif prop == string.char(67,108,111,99,107,84,105,109,101) then L.ClockTime = 12
+elseif prop == string.char(66,114,105,103,104,116,110,101,115,115) then L.Brightness = 10 end
+end
+end)
+end
+flags.fullBrightInit = true
+end
+flags.fullBright = state
+if state then
+L.Brightness = 10
+L.ClockTime = 12
+L.FogEnd = 1000000
+L.GlobalShadows = false
+L.Ambient = Color3.fromRGB(255,255,255)
+else
+L.Brightness = NormalLightingSettings.Brightness
+L.ClockTime = NormalLightingSettings.ClockTime
+L.FogEnd = NormalLightingSettings.FogEnd
+L.GlobalShadows = NormalLightingSettings.GlobalShadows
+L.Ambient = NormalLightingSettings.Ambient
+end
+end
+})
+local doorESPMap = {}
+local doorESPAddedConn = nil
+local doorESPRemovingConn = nil
+local function createDoorESP(door)
+if not door or doorESPMap[door] then return end
+local adorneePart = nil
+if door:IsA(string.char(66,97,115,101,80,97,114,116)) then
+adorneePart = door
+else
+adorneePart = door:FindFirstChildWhichIsA(string.char(66,97,115,101,80,97,114,116)) or door.PrimaryPart
+end
+if not adorneePart then
+for _, c in ipairs(door:GetChildren()) do
+if c:IsA(string.char(66,97,115,101,80,97,114,116)) then
+adorneePart = c
+break
+end
+end
+end
+if not adorneePart then return end
+local playerGui = player:FindFirstChild(string.char(80,108,97,121,101,114,71,117,105)) or player:WaitForChild(string.char(80,108,97,121,101,114,71,117,105))
+local billboard = Instance.new(string.char(66,105,108,108,98,111,97,114,100,71,117,105))
+billboard.Name = string.char(89,111,120,105,68,111,111,114,69,83,80)
+billboard.Adornee = adorneePart
+billboard.AlwaysOnTop = true
+billboard.Size = UDim2.new(0, 80, 0, 20)
+billboard.StudsOffset = Vector3.new(0, 1.6, 0)
+billboard.Parent = playerGui
+local frame = Instance.new(string.char(70,114,97,109,101))
+frame.Size = UDim2.new(1, 0, 1, 0)
+frame.BackgroundTransparency = 0.2
+frame.BackgroundColor3 = Color3.fromRGB(138, 43, 226) 
+frame.BorderSizePixel = 1
+frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
+frame.Parent = billboard
+local uicorner = Instance.new(string.char(85,73,67,111,114,110,101,114))
+uicorner.CornerRadius = UDim.new(0,6)
+uicorner.Parent = frame
+local label = Instance.new(string.char(84,101,120,116,76,97,98,101,108))
+label.Size = UDim2.new(1, -8, 1, 0)
+label.Position = UDim2.new(0, 4, 0, 0)
+label.BackgroundTransparency = 1
+label.Text = string.char(68,111,111,114)
+label.TextColor3 = Color3.fromRGB(255,255,255)
+label.Font = Enum.Font.GothamBold
+label.TextScaled = true
+label.TextStrokeTransparency = 0.6
+label.Parent = frame
+doorESPMap[door] = billboard
+local conn
+conn = Workspace.DescendantRemoving:Connect(function(obj)
+if obj == door or obj == adorneePart then
+if doorESPMap[door] and doorESPMap[door].Parent then
+doorESPMap[door]:Destroy()
+end
+doorESPMap[door] = nil
+if conn then conn:Disconnect() end
+end
+end)
+end
+local function removeDoorESP(door)
+if not door then return end
+if doorESPMap[door] then
+pcall(function() doorESPMap[door]:Destroy() end)
+doorESPMap[door] = nil
+end
+end
+local function isDoorRemote(remoteEvent)
+if not remoteEvent or not remoteEvent:IsA(string.char(82,101,109,111,116,101,69,118,101,110,116)) then return false end
+if remoteEvent.Parent and remoteEvent.Parent.Name == string.char(68,111,111,114) and remoteEvent.Parent.Parent and remoteEvent.Parent.Parent.Parent == Workspace.Rooms then
+return true
+end
+return false
+end
+local function enableDoorESP()
+if doorESPAddedConn or doorESPRemovingConn then return end
+for _, obj in ipairs(Workspace:GetDescendants()) do
+if obj:IsA(string.char(82,101,109,111,116,101,69,118,101,110,116)) and isDoorRemote(obj) then
+local doorModel = obj.Parent
+createDoorESP(doorModel)
+end
+end
+doorESPAddedConn = Workspace.DescendantAdded:Connect(function(obj)
+if obj:IsA(string.char(82,101,109,111,116,101,69,118,101,110,116)) and isDoorRemote(obj) then
+local doorModel = obj.Parent
+createDoorESP(doorModel)
+elseif obj:IsA(string.char(77,111,100,101,108)) and obj.Name == string.char(68,111,111,114) and obj.Parent and obj.Parent.Parent == Workspace.Rooms then
+createDoorESP(obj)
+end
+end)
+doorESPRemovingConn = Workspace.DescendantRemoving:Connect(function(obj)
+if obj:IsA(string.char(82,101,109,111,116,101,69,118,101,110,116)) and isDoorRemote(obj) then
+local doorModel = obj.Parent
+removeDoorESP(doorModel)
+elseif obj:IsA(string.char(77,111,100,101,108)) and obj.Name == string.char(68,111,111,114) and obj.Parent and obj.Parent.Parent == Workspace.Rooms then
+removeDoorESP(obj)
+end
+end)
+end
+local function disableDoorESP()
+for door, billboard in pairs(doorESPMap) do
+removeDoorESP(door)
+end
+doorESPMap = {}
+if doorESPAddedConn then
+doorESPAddedConn:Disconnect()
+doorESPAddedConn = nil
+end
+if doorESPRemovingConn then
+doorESPRemovingConn:Disconnect()
+doorESPRemovingConn = nil
+end
+end
+local ESPSection = MiscTab:NewSection({
+Title = string.char(69,83,80,32,83,101,116,116,105,110,103,115),
+Icon = string.char(101,121,101),
+Position = string.char(82,105,103,104,116)
+})
+ESPSection:NewToggle({
+Title = string.char(68,111,111,114,32,69,83,80),
+Name = string.char(68,111,111,114,69,83,80),
+Default = false,
+Callback = function(state)
+flags.doorESP = state
+if state then
+enableDoorESP()
+else
+disableDoorESP()
+end
+end
+})
+local ConfigTab = Windows:NewTab({
+Title = string.char(67,111,110,102,105,103,115),
+Description = string.char(67,111,110,102,105,103,32,77,97,110,97,103,101,109,101,110,116),
+Icon = string.char(115,97,118,101)
+})
+local ConfigSection = ConfigTab:NewSection({
+Title = string.char(67,111,110,102,105,103,32,84,111,111,108,115),
+Icon = string.char(102,105,108,101,45,99,111,103),
+Position = string.char(76,101,102,116)
+})
+local configNames = Windows.ListConfigs() 
+local configDropdown = ConfigSection:NewDropdown({
+Title = string.char(67,111,110,102,105,103,115),
+Data = configNames,
+Default = configNames[1] or string.char(78,111,110,101),
+Callback = function(a)
+print(string.char(83,101,108,101,99,116,101,100,32,99,111,110,102,105,103,58,32) .. a)
+end,
+})
+local configNameTextbox = ConfigSection:NewTextbox({
+Title = string.char(67,111,110,102,105,103,32,78,97,109,101),
+Default = string.char(),
+FileType = string.char(), 
+Callback = function(name)
+print(string.char(69,110,116,101,114,101,100,32,110,97,109,101,58,32) .. name)
+end,
+})
+ConfigSection:NewButton({
+Title = string.char(67,114,101,97,116,101,32,67,111,110,102,105,103),
+Callback = function()
+local newName = configNameTextbox.Get()
+if newName and newName ~= string.char() then
+Windows.SaveConfig(newName)
+configNames = Windows.ListConfigs()
+configDropdown.Refresh(configNames)
+print(string.char(67,114,101,97,116,101,100,32,99,111,110,102,105,103,58,32) .. newName)
+end
+end,
+})
+ConfigSection:NewButton({
+Title = string.char(76,111,97,100,32,67,111,110,102,105,103),
+Callback = function()
+local selected = configDropdown.Get()
+if selected then
+Windows.LoadConfig(selected)
+print(string.char(76,111,97,100,101,100,32,99,111,110,102,105,103,58,32) .. selected)
+end
+end,
+})
+ConfigSection:NewButton({
+Title = string.char(68,101,108,101,116,101,32,67,111,110,102,105,103),
+Callback = function()
+local selected = configDropdown.Get()
+if selected then
+delfile(Windows.ConfigFolder .. string.char(47) .. selected .. string.char(46,106,115,111,110))
+configNames = Windows.ListConfigs()
+configDropdown.Refresh(configNames)
+print(string.char(68,101,108,101,116,101,100,32,99,111,110,102,105,103,58,32) .. selected)
+end
+end,
+})
+ConfigSection:NewButton({
+Title = string.char(82,101,102,114,101,115,104,32,67,111,110,102,105,103,115),
+Callback = function()
+configNames = Windows.ListConfigs()
+configDropdown.Refresh(configNames)
+print(string.char(67,111,110,102,105,103,115,32,114,101,102,114,101,115,104,101,100))
+end,
+})
